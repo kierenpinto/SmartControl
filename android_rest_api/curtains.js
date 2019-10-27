@@ -16,6 +16,8 @@ let db = admin.firestore() // Init Firestore
 
 const curtainsRef = db.collection('curtains')
 
+router.use(express.json()) // Add JSON middleware
+
 router.get('/',(req,res)=>{
     curtainsRef.doc('user').get().then(doc => {
 
@@ -23,6 +25,20 @@ router.get('/',(req,res)=>{
         //res.send("Curtains! Camera! Action!")
         res.send(JSON.stringify(text))
     })
+})
+
+router.get('/verify', (req,res) => {
+  console.log(req.body)
+  // request_body = JSON.parse(req.body)
+  idToken = req.body.idToken
+  admin.auth().verifyIdToken(idToken).then((decodedToken)=>{
+    let uid =decodedToken.uid
+    admin.auth().getUser(uid).then((record)=>{
+      res.send({'name':record.displayName,"uid":uid})
+    })
+  }
+  )
+  // res.send(req.body)
 })
 
 
