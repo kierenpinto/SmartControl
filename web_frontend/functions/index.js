@@ -4,8 +4,20 @@ const cors = require('cors')
 // https://firebase.google.com/docs/functions/write-firebase-functions
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
- response.send("Hello from Firebase!");
-});
+
+ if (request.method === "GET"){
+    if (request.body){
+        response.send(JSON.stringify(request.body))
+    }else{
+        response.send("Hello from Firebase - no body here - GET");
+    }
+ }else{
+    if (request.body){
+        response.send(JSON.stringify(request.body))
+    }else{
+        response.send("Hello from Firebase - no body here - POST");
+    }
+}});
 
 const express = require('express')
 const app = express()
