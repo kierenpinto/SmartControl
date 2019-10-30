@@ -1,0 +1,15 @@
+{ "body": 
+    { "inputs": [
+        { "context": {
+            "locale_country": "AU", "locale_language": "en" 
+            }, "intent": "action.devices.EXECUTE", 
+            "payload": {
+                "commands": [
+                    { "devices": [{ "id": "123" }], "execution": [
+                        { "command": "action.devices.commands.OpenClose", "params": { "openPercent": 100 } 
+                    }] 
+                }] 
+            } 
+        }], "requestId": "13182237911901383771" 
+    }, 
+"headers": { "host": "us-central1-smc2-e0416.cloudfunctions.net", "user-agent": "Mozilla/5.0 (compatible; Google-Cloud-Functions/2.1; +http://www.google.com/bot.html)", "transfer-encoding": "chunked", "accept-encoding": "gzip,deflate,br", "authorization": "Bearer eyJraWQiOiJvVlFWYmxldnVWTjAybVVCQy1NdmlCRWtNRTdKR1FIRjhXWFVldUV6MENnIiwiYWxnIjoiUlMyNTYifQ.eyJ2ZXIiOjEsImp0aSI6IkFULldUOVU2TVBkckNMNnplZ3VGcXlrSjRxS0lrSXZkbzRwVmp6UGxMbGlvanciLCJpc3MiOiJodHRwczovL2Rldi00OTYzMDYub2t0YS5jb20vb2F1dGgyL2RlZmF1bHQiLCJhdWQiOiJhcGk6Ly9kZWZhdWx0IiwiaWF0IjoxNTcyMzk2NDQ3LCJleHAiOjE1NzI0MDAwNDcsImNpZCI6IjBvYTFvd3JuZ29yRFN4aXIyMzU3IiwidWlkIjoiMDB1MW9lMGlkN2c3QlF0a1MzNTciLCJzY3AiOlsicHJvZmlsZSIsImVtYWlsIiwib3BlbmlkIl0sInN1YiI6ImtpZXJlbi5waW50b0Bob3RtYWlsLmNvbSJ9.dBrPg3kEMVoMQgXKRakOkT50MPpqyaqFUCUKiwIZcjPjSemcvLtGyZa2Dtm8-0MQ_lUtcKP8h3lceQRB30ACSx1mowtOeUf_X90MUrSfsTGERTBC7bLPzPlrdgTP3X4Q1qF6JxNlHC8ZVId0o0uHxOt2EmnjhXrXzhtdy8WTW5U_eRidaPAe4_q6d1QH5-uJIZt8rVII6MEuumiZVKM27sbPo2E8hdzoYPUX5KpCq94NS2GbhdR5BSywPZHG_1SupOIHL8ZsiPDXdaCCOr_ZBrW01nOPMFM1uK_dfiel-6v9gQY8rabOSY9t5yjm75O26So-kY3xVBHCPa7Z57Qtow", "content-type": "application/json;charset=UTF-8", "forwarded": "for=\"64.233.173.174\";proto=https", "function-execution-id": "6j8f805tm9xq", "google-assistant-api-version": "v1", "x-appengine-city": "?", "x-appengine-citylatlong": "0.000000,0.000000", "x-appengine-country": "US", "x-appengine-default-version-hostname": "t279fb2ad69a07d35-tp.appspot.com", "x-appengine-https": "on", "x-appengine-region": "?", "x-appengine-request-log-id": "5db8e84800ff06df26e60601080001737e74323739666232616436396130376433352d7470000134316261363837316432303332623061333939383262356532383935623438333a35000100", "x-appengine-user-ip": "64.233.173.174", "x-cloud-trace-context": "162b5aca01a09f6143c0a2f3f2a8497d/16194654277654310906;o=1", "x-forwarded-for": "64.233.173.174", "x-forwarded-proto": "https", "connection": "close" } }
