@@ -7,6 +7,9 @@ const app = smarthome()
 // Register handlers for Smart Home intents
 
 app.onExecute((body, headers) => {
+    let inputs = body.inputs
+    let command = inputs.payload.commands[0];
+    let device = command.devices[0]
     return {
       requestId: body.requestId,
       payload: {
@@ -14,7 +17,7 @@ app.onExecute((body, headers) => {
           ids: ["123"],
           status: "SUCCESS",
           states: {
-            on: true,
+            openPercent: 100.0,
             online: true
           }
         }]
@@ -29,9 +32,10 @@ app.onQuery((body, headers) => {
     payload: {
       devices: {
         123: {
-            on: true,
-            online: true
-          }
+          on: true,
+          online: true,
+          openPercent: 100.0
+        }
       }
     },
   }
@@ -44,13 +48,14 @@ app.onSync((body, headers) => {
       agentUserId: body.agentUserId,
       devices: [{
         id: "123",
-        type: "action.devices.types.OUTLET",
+        type: "action.devices.types.CURTAIN",
         traits: [
-          "action.devices.traits.OnOff"
+          //"action.devices.traits.OnOff",
+          'action.devices.traits.OpenClose',
         ],
         name: {
-          defaultNames: ["My Outlet 1234"],
-          name: "Night light"
+          defaultNames: ["My Curtains"],
+          name: "Kieren's Bedroom Curtain"
         },
         willReportState: false,
       }]
@@ -58,4 +63,4 @@ app.onSync((body, headers) => {
   }
 })
 
-modules.exports = app;
+module.exports = app;
