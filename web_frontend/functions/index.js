@@ -9,11 +9,11 @@ exports.fulfillment = functions.https.onRequest(app_fulfillment);
 
 
 // OLD CURTAINS API
-const express = require('express')
+/* const express = require('express')
 const app = express()
 const curtains_route = require('./curtains')
 app.use(cors({origin: true}))
 //app.use(express.json()) // Add JSON middleware
 app.get('/', (req, res) => res.send('Hello World!'))
 app.use('/curtains',curtains_route)
-exports.widgets = functions.https.onRequest(app);
+exports.widgets = functions.https.onRequest(app); */
