@@ -1,6 +1,6 @@
 // Import the appropriate service
 const { smarthome } = require('actions-on-google')
-
+device_fulfill = require('./device-fulfillment');
 // Create an app instance
 const app = smarthome()
 
@@ -8,13 +8,14 @@ const app = smarthome()
 
 app.onExecute((body, headers) => {
     let inputs = body.inputs
-    let command = inputs.payload.commands[0];
-    let device = command.devices[0]
+    //let command = inputs.payload.commands[0];
+    //let device = command.devices[0]
+    //console.log(JSON.stringify({'body':body,'headers':headers}))
     return {
       requestId: body.requestId,
       payload: {
         commands: [{
-          ids: ["123"],
+          ids: ["7b2tIs3OqKRAA8xjnBEg"],
           status: "SUCCESS",
           states: {
             openPercent: 100.0,
@@ -31,7 +32,7 @@ app.onQuery((body, headers) => {
     requestId: body.requestId,
     payload: {
       devices: {
-        123: {
+        "7b2tIs3OqKRAA8xjnBEg": {
           on: true,
           online: true,
           openPercent: 100.0
@@ -42,12 +43,23 @@ app.onQuery((body, headers) => {
 })
 
 app.onSync((body, headers) => {
+  return device_fulfill.proc_sync_req('HjGMm3dinXuCxNFuzfm6').then(devices =>{
+    return {
+      requestId: body.requestId,
+      payload: {
+        agentUserId: body.agentUserId,
+        devices: devices
+      },
+    }
+  }).catch(err=>console.error(err))
+
+  /* //Reference
   return {
     requestId: body.requestId,
     payload: {
       agentUserId: body.agentUserId,
       devices: [{
-        id: "123",
+        id: "7b2tIs3OqKRAA8xjnBEg",
         type: "action.devices.types.CURTAIN",
         traits: [
           //"action.devices.traits.OnOff",
@@ -60,7 +72,7 @@ app.onSync((body, headers) => {
         willReportState: false,
       }]
     },
-  }
+  }*/
 })
 
 module.exports = app;
