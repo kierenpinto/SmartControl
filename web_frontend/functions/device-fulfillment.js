@@ -2,7 +2,8 @@
 const admin = require("firebase-admin");
 admin.initializeApp();
 let db = admin.firestore() // Init Firestore
-
+const deviceRef = db.collection("devices");
+const usersRef = db.collection('users');
 // Sample Body Input
 /* { "inputs": [
     { "context": {
@@ -21,31 +22,38 @@ let db = admin.firestore() // Init Firestore
 
 function proc_execute_req(body) {
     // processes the execute request
-    let inputs = body.inputs;
-    inputs.forEach(input => {
-        let commands_list = input.payload.commands;
-        commands_list.forEach(command_set => {
-            let devices = command_set.devices;
-            devices.forEach(device => {
-                command_set.execution.forEach(execute => {
-                    execute_single(device.id, execute)
+    return new Promise ((resolve,reject)=>{
+        let inputs = body.inputs;
+        let command_response = [];
+        inputs.forEach(input => {
+            let commands_list = input.payload.commands;
+            let response = commands_list.map(command_set => {
+                let devices = command_set.devices;
+                let device_id_array = devices.map(device => {
+                    command_set.execution.forEach(execute => {
+                        execute_single(device.id, execute)
+                    })
+                    return device.id
                 })
+                let states = command_set.execution.reduce((array,exec)=>Object.assign(array,exec.params),{})
+                //console.log("states",states)
+                return {ids:device_id_array, status:"SUCCESS",states:states}
             })
-
-        })
-    });
+            console.log("Single Response",JSON.stringify(response))
+            command_response = command_response.concat(response);
+        });
+        resolve(command_response)
+    })
 }
 
 function execute_single(device_id, execute) {
     // Executes a single action
-
     // Look up id in database and to find out what type of device it is
-
+    return deviceRef.doc(device_id).update({states:execute.params})
     // Switch based on device type to execute - or change the parameters in the database
-
 }
 
-const usersRef = db.collection('users');
+
 function proc_sync_req(user_id) {
     // Grab user
     let devices;
@@ -82,33 +90,39 @@ function proc_sync_req(user_id) {
 // Test proc_sync_req
 //console.log("invoke",proc_sync_req('HjGMm3dinXuCxNFuzfm6').then(out=>console.log("final out",out)))
 
-const deviceRef = db.collection("devices");
-function proc_query_req(body) {
-    let inputs = body.inputs;
-    let all_device_promises = []
-    inputs.forEach(input => {
-        let devices = input.payload.devices;
-        let devices_promise = devices.map(device => {
-            let id = device.id;
-            // get the state of each device and put it into  an object
-            return deviceRef.doc(id).get() // return promise for each device
-        })
-        all_device_promises.concat(devices_promise);
-    })
 
-    //return promise of all device states - as an array
-    return Promise.all(all_device_promises).then(devices=>{
-        let states = devices.map(device =>{
-            // Assume only curtains for now:
-            let doc = device.doc()
-            return doc.states.open
+/**
+ * @function proc_query_req Processes the Query Request from Google Assistant Actions
+ * @param {Array} device_id_list Array of Device IDs
+ * @returns {Promise} promise of all device states as an array {state_obj:state Obj, id: device_id}
+ */
+function proc_query_req(device_id_list) {
+    let all_device_promises = Promise.all(device_id_list.map(id=>{
+        console.log("device id",id)
+        return deviceRef.doc(id).get()
+    }))
+    console.log("Device Promises",JSON.stringify(all_device_promises))
+    return (all_device_promises).then(devices=>{
+        return new Promise((resolve,reject)=>{
+            console.log("devices",JSON.stringify(devices))
+            let states = []
+            devices.forEach((device,index) =>{
+                // Assume only curtains for now:
+                let doc = device.data()
+                let ret_obj = {state_obj:doc.states, id: device_id_list[index]}
+                console.log(ret_obj)
+                states.push(ret_obj);
+            })
+            console.log("states",states)
+            resolve(states)
         })
-        return states
     }).catch(err=>console.log(err))
 }
 
 
 
 module.exports = {
-    proc_sync_req:proc_sync_req
+    proc_sync_req:proc_sync_req, // Export SYNC function
+    proc_query_req:proc_query_req, // Export QUERY function
+    proc_execute_req:proc_execute_req //Export EXECUTE function
 }
