@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Curtains State</title>
+
+    <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.2.2/firebase-firestore.js"></script>
+
+    <style media="screen">
+      body { background: #ECEFF1; color: rgba(0,0,0,0.87);
+      font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
+        .slidecontainer {
+    width: 100%; /* Width of the outside container */
+    }
+
+    /* The slider itself */
+    .slider {
+    -webkit-appearance: none;  /* Override default CSS styles */
+    appearance: none;
+    width: 100%; /* Full-width */
+    height: 25px; /* Specified height */
+    background: #d3d3d3; /* Grey background */
+    outline: none; /* Remove outline */
+    opacity: 0.7; /* Set transparency (for mouse-over effects on hover) */
+    -webkit-transition: .2s; /* 0.2 seconds transition on hover */
+    transition: opacity .2s;
+    }
+
+    /* Mouse-over effects */
+    .slider:hover {
+    opacity: 1; /* Fully shown on mouse-over */
+    }
+
+    /* The slider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+    .slider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    }
+
+    .slider::-moz-range-thumb {
+    width: 25px; /* Set a specific slider handle width */
+    height: 25px; /* Slider handle height */
+    background: #4CAF50; /* Green background */
+    cursor: pointer; /* Cursor on hover */
+    }
+      #message { background: white; max-width: 360px; margin: 100px auto 16px;
+      padding: 32px 24px; border-radius: 3px; }
+      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
+      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
+      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
+      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase;
+      text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
+      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
+      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
+      #message span {word-wrap: break-word;}
+      @media (max-width: 600px) {
+        body, #message { margin-top: 0; background: white; box-shadow: none; }
+        body { border-top: 16px solid #ffa100; }
+      }
+    </style>
+  </head>
+  <body>
+    <div id="message">
+      <h2>Welcome</h2>
+      <h1>Curtain State!</h1>
+      <p id = 'name'></p>
+      <a id = "SignOutBtn" target="_blank">Open</a>
+      <div class="slidecontainer">
+        <input type="range" min="0" max="100" value="50" class="slider" id="myRange">
+      </div>
+    </div>  
+    <script>
+            // Your web app's Firebase configuration
+            var firebaseConfig = {
+          apiKey: "AIzaSyByuiFeQAioVumSfEHGJ1N8Nxgg1yY3Lw8",
+          authDomain: "smc2-e0416.firebaseapp.com",
+          databaseURL: "https://smc2-e0416.firebaseio.com",
+          projectId: "smc2-e0416",
+          storageBucket: "smc2-e0416.appspot.com",
+          messagingSenderId: "1014428648038",
+          appId: "1:1014428648038:web:38751cbcd97ab0866863a7"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+      document.addEventListener('DOMContentLoaded', function() {
+        var db = firebase.firestore();
+        let slider = document.getElementById('myRange')
+        let doc = db.collection('devices').doc('7b2tIs3OqKRAA8xjnBEg');
+        doc.onSnapshot(snapshot=>{
+            let openPercent = snapshot.data().states.openPercent
+            slider.value = openPercent
+        })
+
+        slider.oninput = function(){
+            doc.update({
+                states:{openPercent:slider.value}
+            })
+        }
+
+
+        document.getElementById('SignOutBtn').addEventListener("click",() => firebase.auth().signOut())
+        document.getElementById('SignOutBtn').style.display = 'none';
+      });
+    </script>
+  </body>
+</html>
