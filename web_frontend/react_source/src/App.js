@@ -1,24 +1,50 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { ThemeProvider } from '@material-ui/styles';
+import { createMuiTheme } from '@material-ui/core';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import { Security, ImplicitCallback } from '@okta/okta-react';
+import Home from './Home';
 
+const config = {
+  issuer: 'https://dev-496306.okta.com/oauth2/default',
+  redirectUri: window.location.origin + '/implicit/callback',
+  clientId: '0oa1wdt4ccM1ijs5c357',
+  pkce: true
+}
+
+let theme = createMuiTheme({
+    palette: {
+      primary: {
+        light: '#b2fab4',
+        main: '#81c784',
+        dark: '#519657',
+        contrastText: '#000000',
+      },
+      secondary: {
+        light: '#c1d5e0',
+        main: '#90a4ae',
+        dark: '#62757f',
+        contrastText: '#000000',
+      },
+    },
+  })
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Router>
+        <ThemeProvider theme={theme}>
+          {/* <Switch> */}
+          <Security {...config}>
+            <Route path="/" component={Home}/>
+            <Route path='/implicit/callback' component={ImplicitCallback} />
+            </Security>
+          {/* </Switch> */}
+        </ThemeProvider>
+      </Router>
     </div>
   );
 }
