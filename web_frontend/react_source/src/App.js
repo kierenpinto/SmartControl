@@ -3,7 +3,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { createMuiTheme } from '@material-ui/core';
 import {
   BrowserRouter as Router,
-  Switch,
+  // Switch,
   Route
 } from "react-router-dom";
 import { Security, ImplicitCallback } from '@okta/okta-react';
