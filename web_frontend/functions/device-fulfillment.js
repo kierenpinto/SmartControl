@@ -1,6 +1,6 @@
 /* Import firebase */
 const admin = require("firebase-admin");
-admin.initializeApp();
+// admin.initializeApp();
 let db = admin.firestore() // Init Firestore
 const deviceRef = db.collection("devices");
 const usersRef = db.collection('users');
