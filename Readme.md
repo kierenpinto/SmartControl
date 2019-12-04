@@ -6,6 +6,20 @@ Smart Control is an Open Source hobby built project to control home appliances t
 
 This is a REST API written in Express.JS
 
-## [Web Frontend](./web_frontend)
+(This is now deprecated)
 
-This is a simple front-end GUI that can be browsed to in a web- browser.
+
+## [AWS Lambda](./AWSLambda)
+
+These are the replacement for the firebase cloud functions.
+
+These functions were used for fullfilment of the cloud requests and for authentication with firebase services. These old functions can be found in web_frontend/functions.
+
+## [Web Frontend](./web_frontend)
+This directory comprises a few different front-end experiments in the public directory, and an in construction react-app in the react_source directory.
+
+To start the react app:
+
+` cd in ./web_frontend/react_source `
+
+` yarn start `
