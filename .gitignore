@@ -6,3 +6,4 @@ run_sim.sh
 *.crt
 *.key
 *.swp
+web_frontend/functions/aws_config.json
