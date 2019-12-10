@@ -55,14 +55,15 @@ app.get('/', (req, res) =>{
     const accessToken = match[1];
     const expectedAudience = 'api://default';
     console.log("accessToken",accessToken);
+    // For this to work on Google Cloud Functions - cannot be on FREE FB Plan.
     return oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience).then((jwt) => {
-      console.log("JWT HERE: ", jwt)
-      return new Promise((resolve,reject)=>{
-        let claims = jwt.claims
-        console.log("Claims HERE",claims);
-        resolve(res.json(claims))
-      })
-      }).catch((err) => {
+      const claims = jwt.claims; //define claims
+      const okta_uid = claims.uid
+      return admin.auth().createCustomToken(okta_uid)
+    }).then((token)=>{
+      const payload = {"claims":claims, "firebaseAuthToken":token}
+      return res.json(payload)
+    }).catch((err) => {
         res.status(401).send(err);
       });
 })
