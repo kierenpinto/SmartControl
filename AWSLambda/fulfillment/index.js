@@ -1,3 +1,4 @@
+/* Initialise Firebase Admin SDK */
 const admin = require("firebase-admin");
 var serviceAccount = require("./firebase_admin_key.json")
 const firebase_config = {
@@ -6,25 +7,19 @@ const firebase_config = {
 }
 admin.initializeApp(firebase_config);
 
-const app_fulfillment = require('./fulfillment');
-
+/* Initialise Express */
 const express = require('express') // Require Express Framework
-const bodyParser = require('body-parser') // Including fulfillment inside express app-need body Parser middleware
-
+const bodyParser = require('body-parser') //Required for Fulfillment API
 const expressApp = express().use(bodyParser.json())
-let db = admin.firestore()
-
+const app_fulfillment = require('./fulfillment');
+const react_client = require('./react_client');
+expressApp.use('/client',react_client)
 expressApp.get('/',(req,res)=>{
-    db.collection('users').doc('HjGMm3dinXuCxNFuzfm6').get().then(doc=>{
-        if(doc.exists){
-            res.send(doc.data())
-        }else{
-            res.send("document doesn't existttt")
-        }
-    })
+    res.send("Root API Request")
 })
-expressApp.all('/fulfillment',app_fulfillment)
+expressApp.all('/fulfillment',app_fulfillment) // Fulfill google-assistant-actions
 // expressApp.listen(3000, ()=> console.log('listening'))
 
+/* Wrap and export app with Serverless framework */
 const serverless = require('serverless-http');
 module.exports.handler = serverless(expressApp);

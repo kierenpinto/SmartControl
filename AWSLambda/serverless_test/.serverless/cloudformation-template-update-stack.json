@@ -59,7 +59,7 @@
     "AppLogGroup": {
       "Type": "AWS::Logs::LogGroup",
       "Properties": {
-        "LogGroupName": "/aws/lambda/client-api-dev-app"
+        "LogGroupName": "/aws/lambda/serverless-test-dev-app"
       }
     },
     "IamRoleLambdaExecution": {
@@ -88,7 +88,7 @@
                 "-",
                 [
                   "dev",
-                  "client-api",
+                  "serverless-test",
                   "lambda"
                 ]
               ]
@@ -103,7 +103,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/client-api-dev*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/serverless-test-dev*:*"
                     }
                   ]
                 },
@@ -114,7 +114,7 @@
                   ],
                   "Resource": [
                     {
-                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/client-api-dev*:*:*"
+                      "Fn::Sub": "arn:${AWS::Partition}:logs:${AWS::Region}:${AWS::AccountId}:log-group:/aws/lambda/serverless-test-dev*:*:*"
                     }
                   ]
                 }
@@ -127,7 +127,7 @@
           "Fn::Join": [
             "-",
             [
-              "client-api",
+              "serverless-test",
               "dev",
               {
                 "Ref": "AWS::Region"
@@ -145,9 +145,9 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/client-api/dev/1575345911270-2019-12-03T04:05:11.270Z/client-api.zip"
+          "S3Key": "serverless/serverless-test/dev/1575962284298-2019-12-10T07:18:04.298Z/serverless-test.zip"
         },
-        "FunctionName": "client-api-dev-app",
+        "FunctionName": "serverless-test-dev-app",
         "Handler": "index.handler",
         "MemorySize": 128,
         "Role": {
@@ -164,20 +164,20 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AppLambdaVersionjOKRGAc27luTTMeAtbH0io8HwCDuvTJpwz7AfZPxPM": {
+    "AppLambdaVersionm6qVLiaBuKsEzBz7omHYVu4vP6kWdixXIZZQ3wivY": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "7OonSqm2Njag+BZSWb3IibaE3VTdrEehPytpPal2egA="
+        "CodeSha256": "qSPnTkfm3tgQk1P/WsI0WiWIlaokbILx2GErYib4Q14="
       }
     },
     "ApiGatewayRestApi": {
       "Type": "AWS::ApiGateway::RestApi",
       "Properties": {
-        "Name": "dev-client-api",
+        "Name": "dev-serverless-test",
         "EndpointConfiguration": {
           "Types": [
             "EDGE"
@@ -386,7 +386,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1575345901109": {
+    "ApiGatewayDeployment1575962260403": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -448,7 +448,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionjOKRGAc27luTTMeAtbH0io8HwCDuvTJpwz7AfZPxPM"
+        "Ref": "AppLambdaVersionm6qVLiaBuKsEzBz7omHYVu4vP6kWdixXIZZQ3wivY"
       }
     },
     "ServiceEndpoint": {
