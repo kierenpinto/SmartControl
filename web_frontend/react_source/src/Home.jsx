@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import './App.css';
 import TopBar from './TopBar';
 import { withAuth } from '@okta/okta-react';
+import * as firebase from 'firebase';
 
 export default withAuth(class Home extends Component {
   constructor(props) {
@@ -61,14 +62,15 @@ class TestComponent extends Component{
     try {
       let access_token = await this.props.auth.getAccessToken();
       console.log("access token", access_token)
-      const response = await fetch('https://us-central1-smc2-e0416.cloudfunctions.net/react_client', {
-      // const response = await fetch('http://localhost:5001/smc2-e0416/us-central1/react_client', {
-
+      const response = await fetch('https://us-central1-smc2-e0416.cloudfunctions.net/react_client', {    
       headers: {
           Authorization: 'Bearer ' + access_token
         }
       });
-      console.log(await response.text())
+      const json_response = await response.json()
+      console.log(json_response)
+      const token = json_response.firebaseAuthToken;
+      firebase.auth().signInWithCustomToken(token)
       // const data = await response.json();
       // console.log("Response Data",data);
     } catch (err) {
