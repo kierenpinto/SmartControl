@@ -3,3 +3,6 @@ firebase_admin_key.json
 run_sim.sh
 *.DS_Store
 *npm-debug.log
+*.crt
+*.key
+*.swp

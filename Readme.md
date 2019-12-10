@@ -9,6 +9,9 @@ These work alongside the firebase cloud functions.
 
 These functions were used for fullfilment of the cloud requests and for authentication with firebase services. These old functions can be found in web_frontend/functions.
 
+## [AWS IOT Core](./IOT)
+This code is used on the client side (Raspberry PI) to connect to AWS IOT core. This enables messages to be sent from the cloud to the application at the end user. 
+
 ## [Web Frontend](./web_frontend)
 This directory comprises a few different front-end experiments in the public directory, and an in construction react-app in the react_source directory.
 
