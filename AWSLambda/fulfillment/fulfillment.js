@@ -7,6 +7,7 @@ const app = smarthome()
 // Register handlers for Smart Home intents
 
 app.onExecute((body, headers) => {
+  console.log("Execute Request Body",body)
     return device_fulfill.proc_execute_req(JSON.parse(JSON.stringify(body))).then(command_response=>{
       let response = {
         requestId: body.requestId,
@@ -14,7 +15,7 @@ app.onExecute((body, headers) => {
           commands:command_response
         }
       }
-      console.log(response)
+      //console.log(response)
       return response
     }).catch(err=>console.error(err))
   });
@@ -37,17 +38,17 @@ function query_req_ids(body) {
 }
 
 app.onQuery((body, headers) => {
-  console.log("body",body)
+  console.log("Query Request Body",body)
   let ids = query_req_ids(JSON.parse(JSON.stringify(body)));
   return device_fulfill.proc_query_req(ids).then(all_states=>{
     let devices = all_states.reduce((accum_obj,state)=>{
       let device_obj = {[state.id]:{openPercent:state.state_obj.openPercent, on:true, online: true}}
       let new_obj = Object.assign(accum_obj,device_obj);
-      console.log("device obj",device_obj)
-      console.log("new_obj",new_obj)
+      //console.log("device obj",device_obj)
+      //console.log("new_obj",new_obj)
       return new_obj
     },{})
-    console.log("Query Devices",JSON.stringify(devices))
+    //console.log("Query Devices",JSON.stringify(devices))
     return {
       requestId: body.requestId,
       payload: {
@@ -58,6 +59,7 @@ app.onQuery((body, headers) => {
 })
 
 app.onSync((body, headers) => {
+  console.log("Sync Request Body",body)
   return device_fulfill.proc_sync_req('HjGMm3dinXuCxNFuzfm6').then(devices =>{
     return {
       requestId: body.requestId,

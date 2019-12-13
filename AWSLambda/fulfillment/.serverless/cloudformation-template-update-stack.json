@@ -145,7 +145,7 @@
           "S3Bucket": {
             "Ref": "ServerlessDeploymentBucket"
           },
-          "S3Key": "serverless/smc-fulfillment/dev/1575439089541-2019-12-04T05:58:09.541Z/smc-fulfillment.zip"
+          "S3Key": "serverless/smc-fulfillment/dev/1576060288126-2019-12-11T10:31:28.126Z/smc-fulfillment.zip"
         },
         "FunctionName": "smc-fulfillment-dev-app",
         "Handler": "index.handler",
@@ -164,14 +164,14 @@
         "IamRoleLambdaExecution"
       ]
     },
-    "AppLambdaVersionUEMi7H2mnwzDNnkVpzl7XrGJT0AF82FBvvsXAQfaP4": {
+    "AppLambdaVersionaGo9o8bh9N9M7QrRwJdn6W7UhyR7fcNnsy6aUdBRDA": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "tk6aqcmgBPc5VA34rpspDYEbZsQ3LBZTwp0x0H/C9A8="
+        "CodeSha256": "Yvk0rIaTy66s0tH2D4J2WHTaP/l9CFk7movbDoBoDsk="
       }
     },
     "ApiGatewayRestApi": {
@@ -211,8 +211,7 @@
             "ResponseParameters": {
               "method.response.header.Access-Control-Allow-Origin": true,
               "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Credentials": true
+              "method.response.header.Access-Control-Allow-Methods": true
             },
             "ResponseModels": {}
           }
@@ -230,8 +229,7 @@
               "ResponseParameters": {
                 "method.response.header.Access-Control-Allow-Origin": "'*'",
                 "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'",
-                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
               },
               "ResponseTemplates": {
                 "application/json": "#set($origin = $input.params(\"Origin\"))\n#if($origin == \"\") #set($origin = $input.params(\"origin\")) #end\n#if($origin.matches(\".*\")) #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin) #end"
@@ -261,8 +259,7 @@
             "ResponseParameters": {
               "method.response.header.Access-Control-Allow-Origin": true,
               "method.response.header.Access-Control-Allow-Headers": true,
-              "method.response.header.Access-Control-Allow-Methods": true,
-              "method.response.header.Access-Control-Allow-Credentials": true
+              "method.response.header.Access-Control-Allow-Methods": true
             },
             "ResponseModels": {}
           }
@@ -280,8 +277,7 @@
               "ResponseParameters": {
                 "method.response.header.Access-Control-Allow-Origin": "'*'",
                 "method.response.header.Access-Control-Allow-Headers": "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'",
-                "method.response.header.Access-Control-Allow-Credentials": "'false'"
+                "method.response.header.Access-Control-Allow-Methods": "'OPTIONS,DELETE,GET,HEAD,PATCH,POST,PUT'"
               },
               "ResponseTemplates": {
                 "application/json": "#set($origin = $input.params(\"Origin\"))\n#if($origin == \"\") #set($origin = $input.params(\"origin\")) #end\n#if($origin.matches(\".*\")) #set($context.responseOverride.header.Access-Control-Allow-Origin = $origin) #end"
@@ -386,7 +382,7 @@
         "MethodResponses": []
       }
     },
-    "ApiGatewayDeployment1575439043219": {
+    "ApiGatewayDeployment1576060250854": {
       "Type": "AWS::ApiGateway::Deployment",
       "Properties": {
         "RestApiId": {
@@ -448,7 +444,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionUEMi7H2mnwzDNnkVpzl7XrGJT0AF82FBvvsXAQfaP4"
+        "Ref": "AppLambdaVersionaGo9o8bh9N9M7QrRwJdn6W7UhyR7fcNnsy6aUdBRDA"
       }
     },
     "ServiceEndpoint": {

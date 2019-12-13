@@ -8,35 +8,80 @@ function proc_execute_req(body) {
     // processes the execute request
     return new Promise ((resolve,reject)=>{
         let inputs = body.inputs;
-        let command_response = [];
-        inputs.forEach(input => {
+        
+        let command_response = inputs.map(input => {
             let commands_list = input.payload.commands;
-            let response = commands_list.map(command_set => {
+            let responses = commands_list.map(command_set => {
                 let devices = command_set.devices;
-                let device_id_array = devices.map(device => {
-                    command_set.execution.forEach(execute => {
-                        execute_single(device.id, execute)
-                    })
-                    return device.id
-                })
-                let states = command_set.execution.reduce((array,exec)=>Object.assign(array,exec.params),{})
-                //console.log("states",states)
-                return {ids:device_id_array, status:"SUCCESS",states:states}
+                const device_id_array = devices.map(device => { return device.id });
+                let states = command_set.execution.reduce((array, exec) => Object.assign(array, exec.params), {});//console.log("states",states)
+                //Service Commands
+                return Promise.all(devices.map(device => {
+                    return Promise.all(command_set.execution.map(execute => { return execute_single(device.id, execute) }))
+                })).then(() => {
+                    return Promise.resolve({ ids: device_id_array, status: "SUCCESS", states: states })
+                });
             })
-            console.log("Single Response",JSON.stringify(response))
-            command_response = command_response.concat(response);
+            return Promise.all(responses)
+            //command_response = command_response.concat(responses);
         });
-        resolve(command_response)
+        Promise.all(command_response).then((cmd)=>{
+            console.log(cmd.flat())
+            resolve(cmd.flat())})
+        // resolve(command_response)
     })
+}
+
+const CommandTypeMap = {
+    "action.devices.commands.OnOff":{loc:"states.on",param:"on"},
+    "action.devices.commands.BrightnessAbsolute":{loc:"states.brightness",param:"brightness"},
+    //"action.devices.commands.ColorAbsolute":,
 }
 
 function execute_single(device_id, execute) {
     // Executes a single action
     // Look up id in database and to find out what type of device it is
-    return deviceRef.doc(device_id).update({states:execute.params})
+    const singleRef = deviceRef.doc(device_id)
+    let transaction = db.runTransaction(t =>{
+        return t.get(singleRef)
+            .then(doc =>{
+            let device_type = doc.data().type;
+            switch (device_type) {
+                case "curtains":
+                    t.update(singleRef,{states:execute.params})
+                    console.log("Curtains Ran")
+                    // return Promise.resolve("Curtains Complete Execution")
+                    break;
+                case "lights":
+                    t.update(singleRef,{[CommandTypeMap[execute.command].loc]:execute.params[CommandTypeMap[execute.command].param]})
+                    console.log("Lights Ran")
+                    // return Promise.resolve("Lights Completed Execution")
+                    break
+                default:
+                    break;
+            }
+            //console.log("",singleRef,execute)
+        })
+    }).catch(err=>console.error(err))
     // Switch based on device type to execute - or change the parameters in the database
+    return transaction
 }
 
+const DeviceTypeMap = {
+    "curtains":"action.devices.types.CURTAIN",
+    "lights":"action.devices.types.LIGHT",
+}
+
+const DeviceTraitMap = {
+    "curtains":[
+        'action.devices.traits.OpenClose',
+    ],
+    "lights":[
+        "action.devices.traits.Brightness",
+        //"action.devices.traits.ColorSetting",
+        "action.devices.traits.OnOff",
+    ]
+}
 
 function proc_sync_req(user_id) {
     // Grab user
@@ -54,13 +99,13 @@ function proc_sync_req(user_id) {
     // Construct a list:
     return (devices_promises).then(device_docs => {
         return device_docs.map((doc,index)=>{
-            let name = doc.data().name
+            const data = doc.data();
+            let name = data.name;
+            let type = data.type;
             return {
                 id: devices[index].id,
-                type: "action.devices.types.CURTAIN",
-                traits: [
-                    'action.devices.traits.OpenClose',
-                ],
+                type: DeviceTypeMap[type],
+                traits: DeviceTraitMap[type],
                 name: {
                     defaultNames: ["My Curtains"],
                     name: name
@@ -82,22 +127,22 @@ function proc_sync_req(user_id) {
  */
 function proc_query_req(device_id_list) {
     let all_device_promises = Promise.all(device_id_list.map(id=>{
-        console.log("device id",id)
+        //console.log("device id",id)
         return deviceRef.doc(id).get()
     }))
-    console.log("Device Promises",JSON.stringify(all_device_promises))
+    //console.log("Device Promises",JSON.stringify(all_device_promises))
     return (all_device_promises).then(devices=>{
         return new Promise((resolve,reject)=>{
-            console.log("devices",JSON.stringify(devices))
+            //console.log("devices",JSON.stringify(devices))
             let states = []
             devices.forEach((device,index) =>{
                 // Assume only curtains for now:
                 let doc = device.data()
                 let ret_obj = {state_obj:doc.states, id: device_id_list[index]}
-                console.log(ret_obj)
+                //console.log(ret_obj)
                 states.push(ret_obj);
             })
-            console.log("states",states)
+            //console.log("states",states)
             resolve(states)
         })
     }).catch(err=>console.log(err))
