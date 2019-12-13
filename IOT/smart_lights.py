@@ -1,4 +1,5 @@
 import serial, time
+ser = serial.Serial('/dev/ttyACM0')
 
 # Import SDK packages
 from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
@@ -6,7 +7,6 @@ from AWSIoTPythonSDK.MQTTLib import AWSIoTMQTTClient
 import time
 import json
 
-ser = serial.Serial('/dev/ttyACM0')
 # For certificate based connection
 myMQTTClient = AWSIoTMQTTClient("Lights")
 api_endpoint = "af0fl7pfhxnuf-ats.iot.us-west-2.amazonaws.com"
@@ -42,3 +42,4 @@ except:
     myMQTTClient.disconnect()
     ser.close()
     print("unsubscribed and disconnected")
+
