@@ -7,3 +7,4 @@ run_sim.sh
 *.key
 *.swp
 web_frontend/functions/aws_config.json
+vscode_workspace.code-workspace
