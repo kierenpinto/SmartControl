@@ -8,3 +8,4 @@ run_sim.sh
 *.swp
 web_frontend/functions/aws_config.json
 vscode_workspace.code-workspace
+web_frontend/functions/smc-unit-testing-4d6be806760e.json
