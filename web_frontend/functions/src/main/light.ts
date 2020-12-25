@@ -1,6 +1,6 @@
 import Light from "../devices/light";
 import { updateDeviceStates, FirestoreDevice } from "../firestore/device";
-import { Device, DeviceTypes } from "../devices/device";
+import { DeviceTypes } from "../devices/device";
 
 async function updateLightChain(light:Light,transaction:FirebaseFirestore.Transaction){
     

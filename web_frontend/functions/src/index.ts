@@ -1,11 +1,8 @@
 import * as functions from 'firebase-functions';
-import * as admin from 'firebase-admin';
 // import * as app_fulfillment from './fulfillment';
 // import bodyParseApp  from './react_client';
 // import {device_update} from './firestore_triggers';
 import google_assistant from './google_home_assistant';
-// Initialise admin SDK
-admin.initializeApp();
 
 // Google Assistant Actions Endpoint
 //exports.fulfillment = functions.https.onRequest(app_fulfillment);

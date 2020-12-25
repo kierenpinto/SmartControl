@@ -1,6 +1,6 @@
 
 /* Import firebase */
-import * as admin from 'firebase-admin'
+import {admin} from '../firebase_common';
 import { FirestoreToLight } from './devices/light';
 import { Device } from '../devices/device';
 const db = admin.firestore() // Init Firestore

@@ -1,4 +1,4 @@
-import {Device, DeviceTypes, DeviceActions, DeviceActionResponse} from './device'
+import {Device, DeviceTypes, /*DeviceActions, DeviceActionResponse */} from './device'
 
 /**
  * Represent the current curtain states
@@ -34,6 +34,7 @@ class Curtain extends Device<CurtainStates>{
     }
 }
 
+/*
 class CurtainActions extends DeviceActions{
     public openToPercent(percent:number){
         this.actions.set('openPercent',percent);
@@ -57,5 +58,7 @@ class CurtainActions extends DeviceActions{
     
 
 }
-export {Curtain, CurtainActions}
+export {CurtainActions}
+*/
+export {Curtain}
 export default Curtain;

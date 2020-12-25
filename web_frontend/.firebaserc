@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "smc2-e0416"
+    "default": "smc2-e0416",
+    "testing": "smc-unit-testing"
   }
 }

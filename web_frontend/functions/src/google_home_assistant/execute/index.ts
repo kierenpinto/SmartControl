@@ -1,4 +1,4 @@
-import { SmartHomeHandler ,SmartHomeV1ExecuteRequest,SmartHomeV1ExecuteResponse, SmartHomeV1ExecuteResponseCommands, SmartHomeV1ExecuteRequestExecution, SmartHomeV1ExecutePayload } from "actions-on-google";
+import { SmartHomeHandler, SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteResponse, SmartHomeV1ExecuteResponseCommands, SmartHomeV1ExecuteRequestExecution, SmartHomeV1ExecutePayload } from "actions-on-google";
 import { deviceTransaction, getDevice, firestoreToDevice, updateDeviceStates } from "../../firestore/device";
 import { isNull } from "lodash";
 import { DeviceTypes } from "../../devices/device";
@@ -13,32 +13,32 @@ import { LightToFirestore } from "../../firestore/devices/light";
  * @returns {Array<String>} Array of Device IDs
  */
 
-const execute:SmartHomeHandler<SmartHomeV1ExecuteRequest,SmartHomeV1ExecuteResponse> = function (body,headers){
+const execute: SmartHomeHandler<SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteResponse> = async function (body, headers) {
     try {
         // Clean data
         // const fixBody = JSON.parse(JSON.stringify(body))
-        const inputs = body.inputs;
+        //const inputs = body.inputs;
 
         // Run Query
-        const payload = parseExecute(body);
+        const payload = await parseExecute(body);
         // const command_response:SmartHomeV1ExecuteResponseCommands[] = [];
         // Format Response:
-        const response:SmartHomeV1ExecuteResponse = {
+        const response: SmartHomeV1ExecuteResponse = {
             requestId: body.requestId,
             payload: payload
-          }
-          return response
+        }
+        return response
 
     } catch (error) {
         console.error(error);
-        const command_response:SmartHomeV1ExecuteResponseCommands[] = [];
-        const response:SmartHomeV1ExecuteResponse = {
+        const command_response: SmartHomeV1ExecuteResponseCommands[] = [];
+        const response: SmartHomeV1ExecuteResponse = {
             requestId: body.requestId,
             payload: {
-              commands: command_response,
+                commands: command_response,
             },
-          }
-          return response 
+        }
+        return response
     }
 }
 
@@ -48,22 +48,24 @@ const execute:SmartHomeHandler<SmartHomeV1ExecuteRequest,SmartHomeV1ExecuteRespo
  * 
  */
 
-function parseExecute(request:SmartHomeV1ExecuteRequest):SmartHomeV1ExecutePayload{
+async function parseExecute(request: SmartHomeV1ExecuteRequest): Promise<SmartHomeV1ExecutePayload> {
     const inputs = request.inputs;
-    
+
     try {
         // const input_response = inputs.map(input =>{
         const input = inputs[0];
-        if (input.intent == "action.devices.EXECUTE"){// check for execute intent
-            const command_result = input.payload.commands.map(command=>{
-                const device_ids = command.devices.map((d)=>d.id)
-                const instructions = command.execution
-                const instructResult = await runActions(device_ids,instructions);
-                return <SmartHomeV1ExecuteResponseCommands> {ids:device_ids,status:"SUCCESS"};
-            })
-            const payload:SmartHomeV1ExecutePayload = {commands:command_result} // finish
+        if (input.intent == "action.devices.EXECUTE") {// check for execute intent
+            const command_result = await Promise.all(
+                input.payload.commands.map(async command => {
+                    const device_ids = command.devices.map((d) => d.id)
+                    const instructions = command.execution
+                    // const instructResult =
+                    await runActions(device_ids, instructions);
+                    return <SmartHomeV1ExecuteResponseCommands>{ ids: device_ids, status: "SUCCESS" };
+                }))
+            const payload = { commands: command_result } // finish
             return payload
-        }else{
+        } else {
             throw new Error("A non-execute request was triggered on the execute hook")
             //const payload = []
         }
@@ -71,7 +73,7 @@ function parseExecute(request:SmartHomeV1ExecuteRequest):SmartHomeV1ExecutePaylo
     } catch (error) {
         console.error(error)
         const debugString = String(error);
-        const payload:SmartHomeV1ExecutePayload = {commands:[],debugString:"Failed to parse execute: " + debugString,errorCode:"ERROR"} 
+        const payload: SmartHomeV1ExecutePayload = { commands: [], debugString: "Failed to parse execute: " + debugString, errorCode: "ERROR" }
         return payload
     }
 
@@ -85,28 +87,28 @@ function parseExecute(request:SmartHomeV1ExecuteRequest):SmartHomeV1ExecutePaylo
  * ADD RETURN TYPE!!
  */
 
-async function runActions (devices:string[], instructions:SmartHomeV1ExecuteRequestExecution[]){
+async function runActions(devices: string[], instructions: SmartHomeV1ExecuteRequestExecution[]) {
     // Run Instructions on Each Device
-    const deviceResults = devices.map(async device_id=>{
+    const deviceResults = devices.map(async device_id => {
 
-        async function transact (t:FirebaseFirestore.Transaction):Promise<boolean>{
-            const FSdevice = await getDevice(device_id,t)
-            const device = firestoreToDevice(device_id,FSdevice);
-            if (!isNull(device)){
-                switch (device.type){
+        async function transact(t: FirebaseFirestore.Transaction): Promise<boolean> {
+            const FSdevice = await getDevice(device_id, t)
+            const device = firestoreToDevice(device_id, FSdevice);
+            if (!isNull(device)) {
+                switch (device.type) {
                     case DeviceTypes.Light:
                         //handle light
-                        const lightModified = executeLight(device,instructions)
+                        const lightModified = executeLight(device, instructions)
                         const updatedFSdevice = LightToFirestore(lightModified);
-                        await updateDeviceStates(lightModified.id,updatedFSdevice,t);
+                        await updateDeviceStates(lightModified.id, updatedFSdevice, t);
                         return Promise.resolve(true);
                     case DeviceTypes.Curtain:
-                        //handle curtain
+                    //handle curtain
                     default:
                         return Promise.reject("Invalid Device Types") // throw exception
 
                 }
-            }else{
+            } else {
                 return Promise.reject("Invalid Device Types - Device is Null"); //throw exception
             }
         }
