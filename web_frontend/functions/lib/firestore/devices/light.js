@@ -3,6 +3,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.LightToFirestore = exports.FirestoreToLight = void 0;
 const device_1 = require("../device");
 const light_1 = require("../../devices/light");
+/*
+Holds the light models for the firestore database.
+*/
 function FirestoreToLight(id, FSDevice) {
     if (FSDevice.type !== 'lights') {
         throw new Error("A device that is not a light has been converted");

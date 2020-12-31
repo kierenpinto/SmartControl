@@ -1,7 +1,7 @@
 import { SmartHomeHandler, SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteResponse, SmartHomeV1ExecuteResponseCommands, SmartHomeV1ExecuteRequestExecution, SmartHomeV1ExecutePayload } from "actions-on-google";
-import { deviceTransaction, getDevice, firestoreToDevice, updateDeviceStates } from "../../firestore/device";
+import { deviceTransaction, getDevice, firestoreToDevice, updateDeviceStates } from "../../firestore/devices";
 import { isNull } from "lodash";
-import { DeviceTypes } from "../../devices/device";
+import { DeviceTypes } from "../../models/devices";
 import { executeLight } from "./light";
 import { LightToFirestore } from "../../firestore/devices/light";
 

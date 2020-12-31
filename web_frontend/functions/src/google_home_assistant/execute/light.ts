@@ -1,4 +1,4 @@
-import Light from "../../devices/light";
+import Light from "../../models/devices/light";
 import { SmartHomeV1ExecuteRequestExecution } from "actions-on-google";
 
 function executeLight(light: Light, instructions: SmartHomeV1ExecuteRequestExecution[]) {

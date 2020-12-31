@@ -1,4 +1,4 @@
-import {Device, DeviceTypes, /*DeviceActions, DeviceActionResponse */} from './device'
+import {Device, DeviceTypes, /*DeviceActions, DeviceActionResponse */} from '.'
 
 /**
  * Represent the current curtain states

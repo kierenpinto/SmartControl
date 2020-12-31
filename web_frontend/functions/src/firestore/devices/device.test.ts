@@ -1,6 +1,6 @@
 
 import * as assert from 'assert';
-import { getDevice, FirestoreDevice } from './device';
+import { getDevice, FirestoreDevice } from '.';
 import * as admin from 'firebase-admin';
 
 function awesome(){
