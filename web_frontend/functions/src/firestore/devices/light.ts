@@ -1,4 +1,5 @@
 import { FirestoreDevice, usersRef } from ".";
+import { DeviceTypes } from "../../models/devices";
 import Light, { LightStates } from "../../models/devices/light";
 
 /*
@@ -15,13 +16,13 @@ class NoDeviceUserError extends Error {
     }
 }
 
-const LightFirestoreConverter = {
+const LightFirestoreConverter: FirebaseFirestore.FirestoreDataConverter<Light> = {
     toFirestore(light:Light): FirebaseFirestore.DocumentData {
         const states = new Map();
         states.set("brightness", light.states.brightness);
         states.set("on",light.states.on);
         const userRef = usersRef.doc(light.user)
-        return new FirestoreDevice(light.name,"light",userRef,states);
+        return new FirestoreDevice(light.name,DeviceTypes.Light,userRef,states);
     },
     fromFirestore(snapshot: FirebaseFirestore.QueryDocumentSnapshot){
         const id = snapshot.id;
@@ -40,7 +41,7 @@ const LightFirestoreConverter = {
         if (!data.userRef || !(data.userRef instanceof FirebaseFirestore.DocumentReference)){
             throw new NoDeviceUserError();
         } else {
-            data.userRef = <FirebaseFirestore.DocumentReference> data.userRef;
+            data.userRef = data.userRef;
         }
 
         // Ensure states are represented in a Map
@@ -54,22 +55,3 @@ const LightFirestoreConverter = {
 }
 
 export {LightFirestoreConverter}
-
-// function FirestoreToLight(id:string, FSDevice:FirestoreDevice):Light{
-//     if (FSDevice.type !== 'light'){
-//         throw new Error("A device that is not a light has been converted");
-//     }
-//     const states = new LightStates(FSDevice.states.get('brightness'),FSDevice.states.get('on'));
-    
-//     const light = new Light(id,FSDevice.name,states,FSDevice.userRef.id,FSDevice.userRef);
-//     return light;
-// }
-// export {FirestoreToLight}
-
-// function LightToFirestore(light:Light):FirestoreDevice{
-//     const states = new Map();
-//     states.set("brightness", light.states.brightness);
-//     states.set("on",light.states.on);
-//     return new FirestoreDevice(light.name,"light",light._userRef,states);
-// }
-// export {LightToFirestore}

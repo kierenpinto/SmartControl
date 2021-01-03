@@ -24,6 +24,7 @@ class CurtainStates {
  */
 
 class Curtain extends Device<CurtainStates>{
+    converter!: FirebaseFirestore.FirestoreDataConverter<any>;
     protected _states: CurtainStates;
     constructor(id: string, name: string, states: CurtainStates, type: DeviceTypes, user: string){
         super(id,name,type,user);
@@ -34,31 +35,5 @@ class Curtain extends Device<CurtainStates>{
     }
 }
 
-/*
-class CurtainActions extends DeviceActions{
-    public openToPercent(percent:number){
-        this.actions.set('openPercent',percent);
-    }
-
-    public runActions(id:string): Map<string, DeviceActionResponse> {
-        // Send commant to IOT device
-
-        // await response from IOT device
-
-        //Update database
-
-        //await response from database
-
-        //return response
-
-
-        // Comment out when done
-        throw new Error("Curtain Actions run method not implemented.");
-    }
-    
-
-}
-export {CurtainActions}
-*/
 export {Curtain}
 export default Curtain;

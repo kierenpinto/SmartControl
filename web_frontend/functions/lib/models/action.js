@@ -1,15 +1,14 @@
+"use strict";
 /**
  * Parent interface for all actions
  */
-
 // enum ModelTypes {
 //     Device = "DEVICE",
 //     User = "USER"
 // }
 // export {ModelTypes}
-
 /**
- * Holds the underlying processes for a read-only query to be fullfilled on a model. 
+ * Holds the underlying processes for a read-only query to be fullfilled on a model.
  */
 // interface ModelQuery{
 //     ModelType: ModelTypes;
@@ -17,7 +16,6 @@
 //     run():Promise<any>;
 // }
 // export {ModelQuery}
-
 // /**
 //  * Holds mutliple query that are run together in an query group.
 //  */
@@ -28,9 +26,8 @@
 //     run():Promise<any>;
 // }
 // export {QueryGroup}
-
 /**
- * Holds the underlying processes for an action to be fullfilled on a model. 
+ * Holds the underlying processes for an action to be fullfilled on a model.
  */
 // interface ModelAction {
 //     readonly ModelType: ModelTypes;
@@ -40,7 +37,6 @@
 //     (initialState:any, modifier:any): any;
 // }
 // export{ModelAction}
-
 /**
  * Holds mutliple actions that are run together in an action group.
  */
@@ -61,3 +57,4 @@
 //     abstract updateData(data:any): Promise<any>;
 // }
 // export {ActionGroup}
+//# sourceMappingURL=action.js.map

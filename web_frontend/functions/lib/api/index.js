@@ -5,9 +5,10 @@ https://blog.logrocket.com/documenting-your-express-api-with-swagger/
 */
 Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
-const bodyParser = require("body-parser");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const devices_1 = require("./devices");
+const auth_1 = require("./auth");
 const options = {
     definition: {
         openapi: "3.0.0",
@@ -31,13 +32,15 @@ const options = {
             },
         ],
     },
-    apis: ["./routes/books.js"],
+    apis: ["./devices"],
 };
 const specs = swaggerJsDoc(options);
 const app = express();
-app.use(bodyParser.urlencoded({
+app.use(express.urlencoded({
     extended: true,
 }));
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
+app.use("/devices", devices_1.default);
+app.use(auth_1.AuthMiddleWare);
 exports.default = app;
 //# sourceMappingURL=index.js.map

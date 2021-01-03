@@ -2,6 +2,7 @@
 import * as assert from 'assert';
 import { getDevice, FirestoreDevice } from '.';
 import * as admin from 'firebase-admin';
+import { DeviceTypes } from '../../models/devices';
 
 function awesome(){
   console.log("hello everyone from test")
@@ -26,7 +27,7 @@ describe("GetDeviceTest", ()=>{
     // const deviceRef = db.collection("devices");
     
     const userRef = db.collection('users').doc('HjGMm3dinXuCxNFuzfm6');
-    const firestoreDevice = new FirestoreDevice('test light','light',userRef,new Map(Object.entries({brightness: 92 , on: true})))
+    const firestoreDevice = new FirestoreDevice('test light',DeviceTypes.Light,userRef,new Map(Object.entries({brightness: 92 , on: true})))
     const dbDevice = await db.runTransaction(async (t)=>{
       return await getDevice('xCAMyLzbgisor8kxM21W', t);
   })

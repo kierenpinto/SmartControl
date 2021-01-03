@@ -1,5 +1,6 @@
 import { isNull } from "lodash";
-import { ActionGroup, ModelAction, ModelTypes } from "../action";
+import { FirestoreDeviceDBAdapter } from "../../firestore/devices";
+import { Update, UpdateAction, ModelTypes } from "../";
 
 enum DeviceTypes {
     Light = 'light',
@@ -13,7 +14,8 @@ abstract class Device<DeviceStates>{
     private _type: DeviceTypes
     private _userid: string
     public _userRef: any; //specialData
-    
+    abstract converter: FirebaseFirestore.FirestoreDataConverter<any>;
+    static actionGroup: DeviceActionGroup<any>
     constructor(id:string,name:string,type:DeviceTypes,userid:string){
         this._id = id;
         this._name = name;
@@ -45,40 +47,29 @@ abstract class Device<DeviceStates>{
 
 }
 
-interface DeviceActionResponse <Device>{
+interface DeviceActionResponse <D>{
     success:boolean,
     message?:string,
-    newState: Device,
+    newState: D,
     IOTAction: string
 }
 
 /**
  * Implement a specific device action to be executed on a single device.
  */
-// abstract class DeviceAction<Device> implements ModelAction {
-//     ModelType: ModelTypes = ModelTypes.Device;
-//     singular: boolean = false;
-//     abstract do(initialState:Device) : Device;
-// }
-interface DeviceAction<Device> extends ModelAction {
-    (initialState: Device): Device;
+interface DeviceAction<D> extends UpdateAction {
+    (initialState: D): D;
 }
 
 /**
  * Implements an action group which can run a series of actions on a single device.
  */
 
-abstract class DeviceActionGroup<D extends Device<any>> implements ActionGroup {
+abstract class DeviceActionGroup<D extends Device<any>> extends Update {
     ModelType: ModelTypes = ModelTypes.Device;
-    FirestoreTransaction: FirebaseFirestore.Transaction;
     abstract actions: Array<DeviceAction<D>>;
     async run(): Promise<any> {
-        let dbState;
-        if(!this.initialState){
-            dbState = await this.getData()
-        } else {
-            dbState = this.initialState;
-        }
+        const dbState = this.initialState;
         let IOTState
         try {
             IOTState = await this.getIOT({})
@@ -90,19 +81,13 @@ abstract class DeviceActionGroup<D extends Device<any>> implements ActionGroup {
             // return action.do(state)
             return action(state)
         }, initialState)
-        this.updateIOT(finalState) // Some IOT Action
+        await this.updateIOT(finalState) // Some IOT Action
         this.updateData(finalState)
         throw new Error("Method not fully implemented.");
     }
-    constructor(transaction: FirebaseFirestore.Transaction, public deviceId: string, public initialState?: D){
-        this.FirestoreTransaction = transaction;
+    constructor(public deviceId: string,public dbAdapter:FirestoreDeviceDBAdapter<D>, public initialState: D){
+        super();
     }
-    /**
-     * Gets data from Firestore
-     * @param options 
-     */
-
-    abstract getData(): Promise<D>
     /**
      * Gets data from IOT device
      * @param options Change this to some IOT options
@@ -126,7 +111,9 @@ abstract class DeviceActionGroup<D extends Device<any>> implements ActionGroup {
      * Writes data to firestore
      * @param data The firestore payload to write.
      */
-    abstract updateData(data: D): Promise<any>
+    updateData(data: D): any {
+        this.dbAdapter.update(data)
+    }
 }
 export {DeviceActionGroup}
 

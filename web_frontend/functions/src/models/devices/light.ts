@@ -1,4 +1,6 @@
 import {Device, DeviceAction, DeviceActionGroup, DeviceTypes} from '.'
+import { FirestoreDeviceDBAdapter } from '../../firestore/devices';
+import { LightFirestoreConverter } from '../../firestore/devices/light';
 
 
 class LightStates {
@@ -9,24 +11,25 @@ class LightStates {
     }
 
     public set brightness(val:number|string){
-        if (typeof(val) === 'string'){
-            val = Number(val);
+        const value = Number(val);
+        if (value<0 || value>100){
+            throw new Error(`Brightness set to ${value}. It should be between 0 and 100`)
         }
-        if (val<0 || val>100){
-            throw new Error(`Brightness set to ${val}. It should be between 0 and 100`)
-        }
-        this._brightness = val;
+        this._brightness = value;
     }
 
     public get brightness() {
         return this._brightness;
     }
 }
+export {LightStates}
 
 /**
  * Model for light device
  */
 class Light extends Device<LightStates>{
+    actionGroup = LightActionGroup;
+    converter = LightFirestoreConverter;
     protected _states: LightStates;
     public get states(): LightStates {
         return this._states;
@@ -36,36 +39,21 @@ class Light extends Device<LightStates>{
         this._states = states;
     }
 }
-
-/**
- * Not sure what this is - probably need to move this code somewhere.
- * @param light 
- * @param transaction 
- */
-// async function updateLightChain(light:Light,transaction:FirebaseFirestore.Transaction){
-    
-//     const FSDevice = new FirestoreDevice(light.name,DeviceTypes[light.type],light._userRef,new Map(Object.entries(light.states)))
-//     return updateDeviceStates(light.id,FSDevice,transaction)
-
-// }
-// export {updateLightChain};
+export {Light}
 
 class LightActionGroup extends DeviceActionGroup<Light> {
-    constructor(transaction: FirebaseFirestore.Transaction, deviceId:string, actions: DeviceAction<Light>[], initialState?:Light){
-        super(transaction,deviceId,initialState);
+    constructor( deviceId:string, actions: DeviceAction<Light>[], public dbAdapter:FirestoreDeviceDBAdapter<Light>,initialState:Light){
+        super(deviceId,dbAdapter,initialState);
         this.actions = actions
     }
-    getData(): Promise<Light> {
-        throw new Error('Method not implemented.');
+    getIOT(options: any): any {
+        console.error('getIOT not implemented')
+        // throw new Error('Method not implemented.');
     }
-    getIOT(options: any): Promise<any> {
-        throw new Error('Method not implemented.');
-    }
-    updateIOT(data: Light): Promise<any> {
-        throw new Error('Method not implemented.');
-    }
-    updateData(data: Light): Promise<any> {
-        throw new Error('Method not implemented.');
+    updateIOT(data: Light): any {
+        console.error('updateIOT not implemented')
+        // throw new Error('Method not implemented.');
+        return
     }
     actions: DeviceAction<Light>[];
     resolveState(dbData: Light, IOTData: any): Light {
@@ -108,48 +96,4 @@ const LightActions = {
 }
 export {LightActions}
 
-
-// class LightActions extends DeviceActions{
-//     device:Light
-//     public onSwitch(on:boolean){
-//         this.actions.set('on',on);
-//     }
-
-//     public brightness(amount:number){
-//         this.actions.set('brightness',amount);
-//     };
-
-//     /**
-//      * Light object that represents the current state of the light device
-//      * @param light 
-//      */
-//     constructor(light:Light){
-//         super();
-//         this.device = light;
-//     }
-
-//     public runActions(): Map<string, DeviceActionResponse> {
-        
-//         const brightness = this.actions.get('brightness')
-//         const on = this.actions.get('on');
-
-        
-//         // Send commant to IOT device
-
-//         // await response from IOT device
-
-//         //Update database
-
-//         //await response from database
-
-//         //return response
-
-
-//         // Comment out when done
-
-//         throw new Error("Method not implemented.");
-//     }
-// }
-
-export {Light, LightStates}
 export default Light;

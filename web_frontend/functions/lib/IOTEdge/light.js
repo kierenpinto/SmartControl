@@ -2,7 +2,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateLightIOTDevice = void 0;
 const common_1 = require("./common");
-// import { DeviceActions, DeviceActionResponse } from "../devices/device";
 /**
  * Specific light update operation
  * @param {Device ID } id

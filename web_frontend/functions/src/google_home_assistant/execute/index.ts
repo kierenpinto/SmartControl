@@ -1,9 +1,9 @@
-import { SmartHomeHandler, SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteResponse, SmartHomeV1ExecuteResponseCommands, SmartHomeV1ExecuteRequestExecution, SmartHomeV1ExecutePayload } from "actions-on-google";
-import { deviceTransaction, getDevice, firestoreToDevice, updateDeviceStates } from "../../firestore/devices";
-import { isNull } from "lodash";
-import { DeviceTypes } from "../../models/devices";
-import { executeLight } from "./light";
-import { LightToFirestore } from "../../firestore/devices/light";
+// import { SmartHomeHandler, SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteResponse, SmartHomeV1ExecuteResponseCommands, SmartHomeV1ExecuteRequestExecution, SmartHomeV1ExecutePayload } from "actions-on-google";
+// import { deviceTransaction, getDevice, firestoreToDevice, updateDeviceStates } from "../../firestore/devices";
+// import { isNull } from "lodash";
+// import { DeviceTypes } from "../../models/devices";
+// import { executeLight } from "./light";
+// import { LightToFirestore } from "../../firestore/devices/light";
 
 
 /**
@@ -13,6 +13,7 @@ import { LightToFirestore } from "../../firestore/devices/light";
  * @returns {Array<String>} Array of Device IDs
  */
 
+/*
 const execute: SmartHomeHandler<SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteResponse> = async function (body, headers) {
     try {
         // Clean data
@@ -41,6 +42,7 @@ const execute: SmartHomeHandler<SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteRes
         return response
     }
 }
+*/
 
 /**
  * 
@@ -48,6 +50,7 @@ const execute: SmartHomeHandler<SmartHomeV1ExecuteRequest, SmartHomeV1ExecuteRes
  * 
  */
 
+ /*
 async function parseExecute(request: SmartHomeV1ExecuteRequest): Promise<SmartHomeV1ExecutePayload> {
     const inputs = request.inputs;
 
@@ -78,6 +81,7 @@ async function parseExecute(request: SmartHomeV1ExecuteRequest): Promise<SmartHo
     }
 
 }
+*/
 
 /**
  * 
@@ -87,6 +91,7 @@ async function parseExecute(request: SmartHomeV1ExecuteRequest): Promise<SmartHo
  * ADD RETURN TYPE!!
  */
 
+ /*
 async function runActions(devices: string[], instructions: SmartHomeV1ExecuteRequestExecution[]) {
     // Run Instructions on Each Device
     const deviceResults = devices.map(async device_id => {
@@ -120,3 +125,4 @@ async function runActions(devices: string[], instructions: SmartHomeV1ExecuteReq
 }
 
 export default execute;
+*/
