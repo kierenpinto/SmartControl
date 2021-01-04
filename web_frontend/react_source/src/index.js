@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import * as firebase from 'firebase';
+import firebase from 'firebase/app';
 
 var firebaseConfig = {
   apiKey: "AIzaSyByuiFeQAioVumSfEHGJ1N8Nxgg1yY3Lw8",

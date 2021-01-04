@@ -6,15 +6,15 @@ import {
   // Switch,
   Route
 } from "react-router-dom";
-import { Security, ImplicitCallback } from '@okta/okta-react';
+import { SecureRoute, Security, LoginCallback } from '@okta/okta-react';
+import { OktaAuth } from '@okta/okta-auth-js';
 import Home from './Home';
 
-const config = {
+const oktaAuth = new OktaAuth({
   issuer: 'https://dev-496306.okta.com/oauth2/default',
-  redirectUri: window.location.origin + '/implicit/callback',
   clientId: '0oa1wdt4ccM1ijs5c357',
-  pkce: true
-}
+  redirectUri: window.location.origin + '/login/callback'
+});
 
 let theme = createMuiTheme({
     palette: {
@@ -38,9 +38,9 @@ function App() {
       <Router>
         <ThemeProvider theme={theme}>
           {/* <Switch> */}
-          <Security {...config}>
+          <Security oktaAuth={oktaAuth}>
             <Route path="/" component={Home}/>
-            <Route path='/implicit/callback' component={ImplicitCallback} />
+            <Route path='/login/callback' component={LoginCallback} />
             </Security>
           {/* </Switch> */}
         </ThemeProvider>
