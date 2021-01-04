@@ -9,44 +9,45 @@ import * as swaggerUi from 'swagger-ui-express';
 import device from './devices';
 import { AuthMiddleWare } from './auth';
 const options = {
-    definition: {
-      openapi: "3.0.0",
-      info: {
-        title: "KPinKonnect Express API with Swagger",
-        version: "0.0.1",
-        description:
-          "This is a simple CRUD API application made with Express and documented with Swagger",
-        license: {
-          name: "MIT",
-          url: "https://spdx.org/licenses/MIT.html",
-        },
-        contact: {
-          name: "Kieren Pinto",
-          url: "kptechreviews.ml",
-          email: "kieren.pinto@hotmail.com",
-        },
+  definition: {
+    openapi: "3.0.0",
+    info: {
+      title: "KPinKonnect Express API with Swagger",
+      version: "0.0.1",
+      description:
+        "This is a simple CRUD API application made with Express and documented with Swagger",
+      license: {
+        name: "MIT",
+        url: "https://spdx.org/licenses/MIT.html",
       },
-      servers: [
-        {
-          url: "http://localhost:3000/books",
-        },
-      ],
+      contact: {
+        name: "Kieren Pinto",
+        url: "kptechreviews.ml",
+        email: "kieren.pinto@hotmail.com",
+      },
     },
-    apis: ["./devices"],
-  };
+    servers: [
+      {
+        url: "http://localhost:3000/books",
+      },
+    ],
+  },
+  apis: ["./devices"],
+};
 const specs = swaggerJsDoc(options)
 const app = express()
 app.use(
-    express.urlencoded({
-      extended: true,
-    })
-  );
+  express.urlencoded({
+    extended: true,
+  }),
+  express.json()
+);
+app.use(AuthMiddleWare)
 app.use("/api-docs",
   swaggerUi.serve,
   swaggerUi.setup(specs)
 )
 
 app.use("/devices", device)
-app.use(AuthMiddleWare)
 
 export default app;

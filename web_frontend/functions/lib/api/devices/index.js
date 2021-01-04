@@ -3,7 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const express = require("express");
 const router = express.Router();
 router.get("/", function (req, res) {
-    res.status(200).json({ 'hi': 'bye' });
+    res.status(200).json({ 'hi': 'bye', 'jwt': JSON.stringify(req.headers.authorization), 'do we have auth?': 'yess', 'decoded': req.jwt });
 });
 exports.default = router;
 //# sourceMappingURL=index.js.map

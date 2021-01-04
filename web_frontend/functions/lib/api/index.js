@@ -38,9 +38,9 @@ const specs = swaggerJsDoc(options);
 const app = express();
 app.use(express.urlencoded({
     extended: true,
-}));
+}), express.json());
+app.use(auth_1.AuthMiddleWare);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
 app.use("/devices", devices_1.default);
-app.use(auth_1.AuthMiddleWare);
 exports.default = app;
 //# sourceMappingURL=index.js.map

@@ -1,14 +1,9 @@
 
 /* Import firebase */
-import {admin} from '../../firebase_common';
 import { DatabaseAdapter } from '../../models';
 import { Device, DeviceTypes } from '../../models/devices';
 import { LightFirestoreConverter } from './light';
-const db = admin.firestore() // Init Firestore
-const deviceRef = db.collection("devices");
-const usersRef = db.collection("users");
-export {deviceRef}
-export {usersRef};
+import {deviceRef,db} from '..'
 
 class FirestoreDevice {
     constructor(public name?: string,public type?:DeviceTypes,public userRef?:FirebaseFirestore.DocumentReference,public states?:Map<string,any>){}
