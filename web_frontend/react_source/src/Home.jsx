@@ -22,13 +22,14 @@ export default withOktaAuth (class Home extends Component {
   }
 
   render() {
-    const {accessToken,isAuthenticated}  = this.props.authState;
+    const {isAuthenticated, accessToken, idToken}  = this.props.authState;
+    console.log(this.props.authState)
     return (
       <div>
         <TopBar Login_Method={this.login} Logout_Method={this.logout} authenticated={isAuthenticated}/>
         <div className="App-body">
           <p>Application Body</p>
-          <TestComponent accessToken={accessToken}/>
+          <TestComponent accessToken={accessToken} idToken={idToken}/>
         </div>
       </div>
     )
@@ -37,7 +38,7 @@ export default withOktaAuth (class Home extends Component {
 
 class TestComponent extends Component{
   render() {
-      const accessToken = this.props.accessToken;
+      const {accessToken, idToken} = this.props;
       console.log("access token", accessToken)
       // const response = await fetch('https://us-central1-smc2-e0416.cloudfunctions.net/react_client', {    
       // headers: {
@@ -56,6 +57,8 @@ class TestComponent extends Component{
           <div className='accessToken'>
           {accessToken.value} 
           </div>
+          ID Token is:
+          {idToken.value}
           </div>)
       } else {
         return <div>Please sign in for access Token</div>

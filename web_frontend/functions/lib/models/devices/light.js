@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LightActions = exports.LightActionGroup = exports.Light = exports.LightStates = void 0;
+exports.LightActions = exports.LightActionGroup = exports.RenameLight = exports.DeleteLight = exports.Light = exports.LightStates = void 0;
 const _1 = require(".");
 const light_1 = require("../../firestore/devices/light");
 class LightStates {
@@ -26,7 +26,7 @@ exports.LightStates = LightStates;
 class Light extends _1.Device {
     constructor(id, name, states, userid) {
         super(id, name, _1.DeviceTypes.Light, userid);
-        this.actionGroup = LightActionGroup;
+        this.ActionGroup = LightActionGroup;
         this.converter = light_1.LightFirestoreConverter;
         this._states = states;
     }
@@ -35,9 +35,28 @@ class Light extends _1.Device {
     }
 }
 exports.Light = Light;
+class DeleteLight extends _1.DeleteDevice {
+    IOTDelete() {
+        // throw new Error('Method not implemented.');
+        console.error("IOTDelete not yet implemented");
+    }
+}
+exports.DeleteLight = DeleteLight;
+class RenameLight extends _1.RenameDevice {
+    async get(device_id) {
+        const light = await this.dbAdapter.get(device_id);
+        if (light) {
+            return light;
+        }
+        else {
+            throw new Error("No light found");
+        }
+    }
+}
+exports.RenameLight = RenameLight;
 class LightActionGroup extends _1.DeviceActionGroup {
-    constructor(deviceId, actions, dbAdapter, initialState) {
-        super(deviceId, dbAdapter, initialState);
+    constructor(initialState, actions, dbAdapter) {
+        super(initialState, dbAdapter);
         this.dbAdapter = dbAdapter;
         this.actions = actions;
     }

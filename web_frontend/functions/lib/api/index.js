@@ -8,6 +8,7 @@ const express = require("express");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const devices_1 = require("./devices");
+const users_1 = require("./users");
 const auth_1 = require("./auth");
 const options = {
     definition: {
@@ -22,25 +23,46 @@ const options = {
             },
             contact: {
                 name: "Kieren Pinto",
-                url: "kptechreviews.ml",
+                url: "https://kptechreview.ml",
                 email: "kieren.pinto@hotmail.com",
             },
         },
         servers: [
             {
-                url: "http://localhost:3000/books",
+                url: "http://localhost:3000/api",
+                description: "Main API server"
             },
         ],
+        "components": {
+            "securitySchemes": {
+                "BearerAuth": {
+                    "type": "http",
+                    "scheme": "Bearer",
+                    "in": "header"
+                }
+            }
+        },
     },
-    apis: ["./devices"],
+    apis: ["./devices/*.js", "./users/*.js", "./homes/*.js"],
 };
 const specs = swaggerJsDoc(options);
 const app = express();
+// Setup API Router
+const api = express.Router();
+api.use(auth_1.AuthMiddleWare);
+api.use("/device", devices_1.default);
+api.use("/user", users_1.default);
+// Include Middleware for url and json parsing.
 app.use(express.urlencoded({
     extended: true,
 }), express.json());
-app.use(auth_1.AuthMiddleWare);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(specs));
-app.use("/devices", devices_1.default);
+// Include API Router
+app.use("/api", api);
+app.use("/docs", swaggerUi.serve, swaggerUi.setup(api));
+app.get("/", (_, res) => {
+    res.json(specs);
+    // res.send("hello word")
+});
+app.listen(3000, () => { console.log("Server is running"); });
 exports.default = app;
 //# sourceMappingURL=index.js.map

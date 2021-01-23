@@ -10,10 +10,13 @@ import { SecureRoute, Security, LoginCallback } from '@okta/okta-react';
 import { OktaAuth } from '@okta/okta-auth-js';
 import Home from './Home';
 
+const SCOPES = 'openid profile email';
+
 const oktaAuth = new OktaAuth({
   issuer: 'https://dev-496306.okta.com/oauth2/default',
   clientId: '0oa1wdt4ccM1ijs5c357',
-  redirectUri: window.location.origin + '/login/callback'
+  redirectUri: window.location.origin + '/login/callback',
+  scopes: SCOPES.split(/\s+/)
 });
 
 let theme = createMuiTheme({

@@ -1,29 +1,28 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.LightFirestoreConverter = void 0;
+exports.LightFirestoreConverter = exports.FirestoreLightDBAdapter = void 0;
 const _1 = require(".");
+const __1 = require("..");
 const devices_1 = require("../../models/devices");
 const light_1 = require("../../models/devices/light");
+const errors_1 = require("./errors");
 /*
-Holds the light models for the firestore database.
+Holds the light dbtabase adapters and converters for the firestore database.
 */
-class NoDeviceUserError extends Error {
+class FirestoreLightDBAdapter extends _1.FirestoreDeviceDBAdapter {
     constructor() {
-        super();
-        this.name = 'NoDeviceUserError';
-        if (Error.captureStackTrace) {
-            Error.captureStackTrace(this, NoDeviceUserError);
-        }
-        this.message = "There was no user assignmed to this device. This is a critical failure!";
+        super(...arguments);
+        this.FirestoreConverter = exports.LightFirestoreConverter;
     }
 }
-const LightFirestoreConverter = {
+exports.FirestoreLightDBAdapter = FirestoreLightDBAdapter;
+exports.LightFirestoreConverter = {
     toFirestore(light) {
         const states = new Map();
         states.set("brightness", light.states.brightness);
         states.set("on", light.states.on);
-        const userRef = _1.usersRef.doc(light.user);
-        return new _1.FirestoreDevice(light.name, devices_1.DeviceTypes.Light, userRef, states);
+        const home = __1.homeRef.doc(light.home);
+        return new _1.FirestoreDevice(light.name, devices_1.DeviceTypes.Light, home, states);
     },
     fromFirestore(snapshot) {
         const id = snapshot.id;
@@ -36,12 +35,12 @@ const LightFirestoreConverter = {
             data.name = 'Unnamed Light';
         }
         const name = String(data.name);
-        // Ensure userReference exists otherwise error.
-        if (!data.userRef || !(data.userRef instanceof FirebaseFirestore.DocumentReference)) {
-            throw new NoDeviceUserError();
+        // Ensure homeReference exists otherwise error.
+        if (!data.homeRef || !(data.homeRef instanceof FirebaseFirestore.DocumentReference)) {
+            throw new errors_1.NoDeviceUserError();
         }
         else {
-            data.userRef = data.userRef;
+            data.homeRef = data.homeRef;
         }
         // Ensure states are represented in a Map
         let statesMap = data.states;
@@ -49,8 +48,7 @@ const LightFirestoreConverter = {
             statesMap = new Map();
         }
         const states = new light_1.LightStates(statesMap.get('brightness'), statesMap.get('on'));
-        return new light_1.default(id, name, states, data.userRef.id);
+        return new light_1.default(id, name, states, data.homeRef.id);
     }
 };
-exports.LightFirestoreConverter = LightFirestoreConverter;
 //# sourceMappingURL=light.js.map

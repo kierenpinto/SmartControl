@@ -7,7 +7,9 @@ import * as express from 'express';
 import * as swaggerJsDoc from 'swagger-jsdoc';
 import * as swaggerUi from 'swagger-ui-express';
 import device from './devices';
+import user from './users';
 import { AuthMiddleWare } from './auth';
+
 const options = {
   definition: {
     openapi: "3.0.0",
@@ -22,32 +24,53 @@ const options = {
       },
       contact: {
         name: "Kieren Pinto",
-        url: "kptechreviews.ml",
+        url: "https://kptechreview.ml", // Note that if there's no http:// or https:// here then the Swagger UI doesn't load properly.
         email: "kieren.pinto@hotmail.com",
       },
     },
     servers: [
       {
-        url: "http://localhost:3000/books",
+        url: "http://localhost:3000/api",
+        description: "Main API server"
       },
     ],
+    "components": {
+      "securitySchemes": {
+        "BearerAuth": {
+          "type": "http",
+          "scheme": "Bearer",
+          "in":"header"
+        }
+      }
+    },
   },
-  apis: ["./devices"],
+  apis: ["./devices/*.js", "./users/*.js","./homes/*.js"],
 };
 const specs = swaggerJsDoc(options)
 const app = express()
+// Setup API Router
+const api = express.Router();
+api.use(AuthMiddleWare)
+api.use("/device", device)
+api.use("/user", user)
+
+// Include Middleware for url and json parsing.
 app.use(
   express.urlencoded({
     extended: true,
   }),
   express.json()
 );
-app.use(AuthMiddleWare)
-app.use("/api-docs",
+
+// Include API Router
+app.use("/api", api)
+app.use("/docs",
   swaggerUi.serve,
-  swaggerUi.setup(specs)
+  swaggerUi.setup(api)
 )
-
-app.use("/devices", device)
-
+app.get("/", (_, res) => {
+  res.json(specs)
+  // res.send("hello word")
+})
+app.listen(3000, () => { console.log("Server is running") })
 export default app;

@@ -14,7 +14,7 @@ const oktaJwtVerifier = new OktaJwtVerifier({
 });
 
 /**
- * Module augmentation used to add JWT parameter to request object in Auth Middelware.
+ * Module augmentation used to add JWT parameter to request object in Auth Middleware.
  */
 declare module 'express-serve-static-core' {
     interface Request {
@@ -33,14 +33,14 @@ const AuthMiddleWare = async function (req:Request, res:Response, next: NextFunc
         // For this to work on Google Cloud Functions - cannot be on FREE FB Plan.
         try {
             const jwt = await oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience)
+            // const jwt = await oktaJwtVerifier.verifyIdToken(accessToken,'0oa1wdt4ccM1ijs5c357')
             console.log("Authenticated JWT: ", jwt)
             req.jwt = jwt;
             next()
         } catch {
             req.jwt = false;
-            console.log("The token has expired")
-            res.status(401).json({'message': 'The token has expired'});
-            next()
+            console.log("The token has expired: ", accessToken)
+            res.status(401).json({'message': `The token '${accessToken}' has expired`});
         }
     }
 }

@@ -1,0 +1,64 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+      "title": "KPinKonnect Express API with Swagger",
+      "version": "0.0.1",
+      "description": "This is a simple CRUD API application made with Express and documented with Swagger",
+      "license": {
+        "name": "MIT",
+        "url": "https://spdx.org/licenses/MIT.html"
+    },
+    "contact": {
+        "name": "Kieren Pinto",
+        "url": "https://kptechreviews.ml",
+        "email": "kieren.pinto@hotmail.com"
+    }
+  },
+  "servers": [
+      {
+          "url": "http://localhost:3000/docs",
+          "description": "Main API server"
+      }
+  ],
+  "components": {
+      "securitySchemes": {
+          "BearerAuth": {
+              "type": "http",
+              "scheme": "bearer"
+          }
+      }
+  },
+  "paths": {
+      "/devices": {
+          "get": {
+              "summary": "Returns a device object that is unknown",
+              "parameters": [
+                  {
+                      "name": "device_id",
+                      "in": "query",
+                      "required": true,
+                      "schema": {
+                          "type": "string"
+                      }
+                  }
+              ],
+              "responses": {
+                  "200": {
+                      "description": "return Device object",
+                      "content": {
+                          "application/json": {
+                              "schema": {
+                                  "type": "array",
+                                  "items": {
+                                      "type": "string"
+                                  }
+                              }
+                          }
+                      }
+                  }
+              }
+          }
+      }
+  },
+  "tags": []
+}

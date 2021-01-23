@@ -1,7 +1,5 @@
-import {Device, DeviceAction, DeviceActionGroup, DeviceTypes} from '.'
-import { FirestoreDeviceDBAdapter } from '../../firestore/devices';
-import { LightFirestoreConverter } from '../../firestore/devices/light';
-
+import { DeleteDevice, Device, DeviceAction, DeviceActionGroup, DeviceTypes, RenameDevice} from '.'
+import { FirestoreLightDBAdapter, LightFirestoreConverter } from '../../firestore/devices/light';
 
 class LightStates {
     private _brightness:number;
@@ -28,7 +26,7 @@ export {LightStates}
  * Model for light device
  */
 class Light extends Device<LightStates>{
-    actionGroup = LightActionGroup;
+    ActionGroup = LightActionGroup 
     converter = LightFirestoreConverter;
     protected _states: LightStates;
     public get states(): LightStates {
@@ -41,9 +39,27 @@ class Light extends Device<LightStates>{
 }
 export {Light}
 
+export class DeleteLight extends DeleteDevice<Light> {
+    protected IOTDelete() {
+        // throw new Error('Method not implemented.');
+        console.error("IOTDelete not yet implemented")
+    }
+
+}
+
+export class RenameLight extends RenameDevice<Light> {
+    async get(device_id: string): Promise<Light> {
+         const light = await this.dbAdapter.get(device_id);
+         if(light){
+             return light;
+         } else {
+             throw new Error("No light found");
+         }
+    }
+}
 class LightActionGroup extends DeviceActionGroup<Light> {
-    constructor( deviceId:string, actions: DeviceAction<Light>[], public dbAdapter:FirestoreDeviceDBAdapter<Light>,initialState:Light){
-        super(deviceId,dbAdapter,initialState);
+    constructor( initialState:Light, actions: DeviceAction<Light>[], public dbAdapter:FirestoreLightDBAdapter){
+        super(initialState,dbAdapter);
         this.actions = actions
     }
     getIOT(options: any): any {

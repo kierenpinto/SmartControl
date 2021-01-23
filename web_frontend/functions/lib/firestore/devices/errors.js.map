@@ -1,0 +1,1 @@
+{"version":3,"file":"errors.js","sourceRoot":"","sources":["../../../src/firestore/devices/errors.ts"],"names":[],"mappings":";;;AAAA,MAAa,iBAAkB,SAAQ,KAAK;IACxC;QACI,KAAK,EAAE,CAAC;QACR,IAAI,CAAC,IAAI,GAAG,mBAAmB,CAAA;QAC/B,IAAI,KAAK,CAAC,iBAAiB,EAAE;YACzB,KAAK,CAAC,iBAAiB,CAAC,IAAI,EAAE,iBAAiB,CAAC,CAAA;SACnD;QACD,IAAI,CAAC,OAAO,GAAG,yEAAyE,CAAA;IAC5F,CAAC;CACJ;AATD,8CASC"}

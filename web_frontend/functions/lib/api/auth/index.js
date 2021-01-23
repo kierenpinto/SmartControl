@@ -22,14 +22,15 @@ const AuthMiddleWare = async function (req, res, next) {
         // For this to work on Google Cloud Functions - cannot be on FREE FB Plan.
         try {
             const jwt = await oktaJwtVerifier.verifyAccessToken(accessToken, expectedAudience);
+            // const jwt = await oktaJwtVerifier.verifyIdToken(accessToken,'0oa1wdt4ccM1ijs5c357')
             console.log("Authenticated JWT: ", jwt);
             req.jwt = jwt;
             next();
         }
         catch {
             req.jwt = false;
-            console.log("Expired");
-            next();
+            console.log("The token has expired: ", accessToken);
+            res.status(401).json({ 'message': `The token '${accessToken}' has expired` });
         }
     }
 };
